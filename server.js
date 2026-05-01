@@ -16,6 +16,9 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Static folder
+app.use(express.static('public'));
+
 // Sessions
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
@@ -44,10 +47,6 @@ app.get('/dashboard', (req, res) => {
   }
 });
 
-// Landing page
-app.get('/', (req, res) => {
-  res.send('<h1>Home</h1><a href="/auth/google">Login with Google</a>');
-});
 
 const PORT = process.env.PORT || 5000;
 
