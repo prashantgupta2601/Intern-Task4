@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const dotenv = require('dotenv');
+const rateLimiter = require('./middleware/rateLimiter');
+const errorHandler = require('./middleware/errorHandler');
 
 // Load config
 dotenv.config();
@@ -37,6 +39,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Routes
 app.use('/auth', require('./routes/auth'));
+app.use('/api', rateLimiter, require('./routes/api'));
 
 // Protected route
 app.get('/dashboard', (req, res) => {
@@ -47,6 +50,8 @@ app.get('/dashboard', (req, res) => {
   }
 });
 
+// Error Handler Middleware (Should be last)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
