@@ -50,6 +50,14 @@ app.get('/dashboard', (req, res) => {
   }
 });
 
+// Handle 404 Errors for API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'API route not found'
+  });
+});
+
 // Error Handler Middleware (Should be last)
 app.use(errorHandler);
 
