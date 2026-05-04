@@ -18,6 +18,9 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// View engine
+app.set('view engine', 'ejs');
+
 // Static folder
 app.use(express.static('public'));
 
@@ -41,10 +44,19 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/auth', require('./routes/auth'));
 app.use('/api', rateLimiter, require('./routes/api'));
 
+// Landing page
+app.get('/', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.redirect('/dashboard');
+  } else {
+    res.render('login');
+  }
+});
+
 // Protected route
 app.get('/dashboard', (req, res) => {
   if (req.isAuthenticated()) {
-    res.send(`<h1>Dashboard</h1><p>Welcome, ${req.user.name}</p><img src="${req.user.avatar}" /><br><a href="/auth/logout">Logout</a>`);
+    res.render('dashboard', { user: req.user });
   } else {
     res.redirect('/');
   }
