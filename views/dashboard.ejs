@@ -155,24 +155,68 @@
             <!-- Main Content -->
             <div class="main-content">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                    <h1 class="h3 mb-0 text-gray-800">Dashboard Overview</h1>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-success d-flex align-items-center px-3"><i class="fas fa-circle fa-xs me-2"></i> System Online</span>
+                        <a href="#" class="btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                    </div>
                 </div>
 
                 <div class="row">
-                    <!-- Welcome Card -->
-                    <div class="col-xl-12 col-md-12 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
+                    <!-- User Profile Card -->
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-primary h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Welcome Message</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Hello, <%= user.name %>! Welcome to your Nexus Dashboard.</div>
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">User Profile</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= user.name %></div>
+                                        <div class="text-muted small"><%= user.email %></div>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Role: User</span>
+                                        </div>
                                     </div>
                                     <div class="col-auto">
-                                        <i class="fas fa-smile fa-2x text-gray-300"></i>
+                                        <img src="<%= user.avatar %>" alt="Avatar" class="rounded-circle" style="width: 60px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Status Card -->
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-success h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">System Status</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Healthy</div>
+                                        <div class="progress progress-sm mt-2">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 98%" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-muted small mt-1">Uptime: 99.9%</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-server fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Status Card -->
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-info h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">API Integrations</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">3 Active</div>
+                                        <div class="text-muted small">Requests today: 1,240</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-plug fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -182,11 +226,37 @@
 
                 <!-- API Data Section (Phase 4) -->
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header">External API Data</div>
+                    <div class="col-lg-8">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Live API Data Feed</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                </div>
+                            </div>
                             <div class="card-body" id="api-data-container">
-                                <p class="text-muted">Loading API data...</p>
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Fetching real-time data...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <!-- Quick Actions -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-outline-primary w-100 mb-2 text-start"><i class="fas fa-sync me-2"></i> Refresh Data</button>
+                                <button class="btn btn-outline-secondary w-100 mb-2 text-start"><i class="fas fa-user-edit me-2"></i> Edit Profile</button>
+                                <button class="btn btn-outline-danger w-100 text-start"><i class="fas fa-exclamation-triangle me-2"></i> Report Issue</button>
                             </div>
                         </div>
                     </div>
