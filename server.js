@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const dotenv = require('dotenv');
+const helmet = require('helmet');
+const cors = require('cors');
 const rateLimiter = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -13,6 +15,18 @@ dotenv.config();
 require('./config/passport')(passport);
 
 const app = express();
+
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "script-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "cdnjs.cloudflare.com"],
+      "img-src": ["'self'", "data:", "lh3.googleusercontent.com", "upload.wikimedia.org"],
+    },
+  },
+}));
+app.use(cors());
 
 // Body parser
 app.use(express.urlencoded({ extended: false }));
@@ -26,9 +40,14 @@ app.use(express.static('public'));
 
 // Sessions
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'secret',
+  secret: process.env.SESSION_SECRET || 'NexusPremiumSecret123!',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 // Passport middleware
