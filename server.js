@@ -44,22 +44,22 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/auth', require('./routes/auth'));
 app.use('/api', rateLimiter, require('./routes/api'));
 
+const { ensureAuthenticated, ensureGuest } = require('./middleware/auth');
+const { checkRole } = require('./middleware/role');
+
 // Landing page
-app.get('/', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.redirect('/dashboard');
-  } else {
-    res.render('login');
-  }
+app.get('/', ensureGuest, (req, res) => {
+  res.render('login');
 });
 
 // Protected route
-app.get('/dashboard', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.render('dashboard', { user: req.user });
-  } else {
-    res.redirect('/');
-  }
+app.get('/dashboard', ensureAuthenticated, (req, res) => {
+  res.render('dashboard', { user: req.user });
+});
+
+// Admin-only route example
+app.get('/admin', ensureAuthenticated, checkRole(['admin']), (req, res) => {
+  res.send('<h1>Admin Panel</h1><p>Only admins can see this.</p>');
 });
 
 // Handle 404 Errors for API routes
